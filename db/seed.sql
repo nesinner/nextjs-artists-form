@@ -1,0 +1,3 @@
+-- Optional seed: mark specific profile IDs as admin after creating users.
+-- Example:
+-- update profiles set is_admin = true where email in ('admin@example.com');

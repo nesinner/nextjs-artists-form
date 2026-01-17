@@ -17,9 +17,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Participant, SubmissionPayload } from "@/lib/types";
 import { submissionSchema } from "@/lib/validators";
 
-const formSchema = submissionSchema.extend({
-  participants: z.array(z.any()),
-});
+const formSchema = submissionSchema.and(
+  z.object({
+    participants: z.array(z.any()),
+  })
+);
 
 type SubmissionFormValues = z.infer<typeof formSchema> & {
   participants: Participant[];

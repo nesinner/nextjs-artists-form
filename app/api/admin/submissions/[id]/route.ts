@@ -1,3 +1,4 @@
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { requireAdminProfile } from "@/lib/api-auth";
@@ -5,14 +6,14 @@ import { createClient } from "@/lib/supabase/server";
 import { adminSubmissionStatusSchema } from "@/lib/validators";
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const profile = await requireAdminProfile();
   if (!profile) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  const { id } = params;
+  const { id } = await params;
   const body = await request.json();
   const statusParse = adminSubmissionStatusSchema.safeParse(body.status);
   if (!statusParse.success) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -16,7 +17,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Participant, SubmissionPayload } from "@/lib/types";
 import { submissionSchema } from "@/lib/validators";
 
-type SubmissionFormValues = SubmissionPayload & {
+const formSchema = submissionSchema.extend({
+  participants: z.array(z.any()),
+});
+
+type SubmissionFormValues = z.infer<typeof formSchema> & {
   participants: Participant[];
 };
 
@@ -64,7 +69,7 @@ export function SubmitForm({ profileEmail }: SubmitFormProps) {
   const lastSavedRef = useRef<string>("");
 
   const form = useForm<SubmissionFormValues>({
-    resolver: zodResolver(submissionSchema),
+    resolver: zodResolver(formSchema),
     defaultValues,
   });
 
